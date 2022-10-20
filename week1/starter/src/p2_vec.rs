@@ -16,28 +16,28 @@ pub type Mask4 = [bool; 4];
 ///
 /// Run `cargo test vec4_add` to check your answer.
 pub fn vec4_add(a: Vec4, b: Vec4) -> Vec4 {
-  unimplemented!()
+  return [a[0] + b[0], a[1] + b[1], a[2] + b[2], a[3] + b[3]]
 }
 
 /// Multiplies two vectors together point-wise
 ///
 /// Run `cargo test vec4_mul` to check your answer.
 pub fn vec4_mul(a: Vec4, b: Vec4) -> Vec4 {
-  unimplemented!()
+  return [a[0] * b[0], a[1] * b[1], a[2] * b[2], a[3] * b[3]]
 }
 
 /// Returns a vector v where v[i] = vtrue[i] if mask[i] is true, else v[i] = vfalse[i]
 ///
 /// Run `cargo test vec4_select` to check your answer.
 pub fn vec4_select(mask: Mask4, vtrue: Vec4, vfalse: Vec4) -> Vec4 {
-  unimplemented!()
+  return [if mask[0] { vtrue[0] } else { vfalse[0] }, if mask[1] { vtrue[1] } else { vfalse[1] }, if mask[2] { vtrue[2] } else { vfalse[2] }, if mask[3] { vtrue[3] } else { vfalse[3] }]
 }
 
 /// Returns a mask of whether a[i] > b[i]
 ///
 /// Run `cargo test vec4_gt` to check your answer.
 pub fn vec4_gt(a: Vec4, b: Vec4) -> Mask4 {
-  unimplemented!()
+  return [a[0] > b[0], a[1] > b[1], a[2] > b[2], a[3] > b[3]]
 }
 
 /// Baseline computation written in traditional iterative style.
@@ -63,7 +63,7 @@ pub fn baseline(a: Vec4, b: Vec4) -> Vec4 {
 ///
 /// Run `cargo test vectorized` to check your answer.
 pub fn vectorized(a: Vec4, b: Vec4) -> Vec4 {
-  unimplemented!()
+  vec4_select(vec4_gt(a, b), vec4_mul(a, b), vec4_add(a, b))
 }
 
 #[cfg(test)]

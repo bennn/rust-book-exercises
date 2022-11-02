@@ -41,15 +41,32 @@ fn round_all_test() {
 /// and returns a value:
 ///   * representing which strings in the collection contain the needle
 pub fn find_contains(
-  /* Pick and justify your parameters */
-) -> () /* Pick and justify your return type */
+  haystack: &Vec<&str>,
+  // haystack must be a collection. Don't need write access (no mut). Choosing Vec over [_] because
+  // it seems more common (though, we don't need to resize). Using &str because we don't mutate the
+  // elements.
+  needle: &str
+  // needle is a reference to a string range. No copying, no mutating, no need to choose at the
+  // call site between ranges and strings.
+) -> Vec<usize>
+// return collection of indices into the haystack
+// if k in the result, then haystack[k] contains the needle
+// - could go further, with indices into the strings too
+// - usize = don't care about the number type
 {
-  unimplemented!();
+  let mut found = Vec::new();
+  for (ii, str) in haystack.iter().enumerate() {
+    if str.contains(needle) {
+      found.push(ii)
+    }
+  }
+  return found
 }
 
 #[test]
 fn find_contains_test() {
-  /* Add your unit test here! */
+  let v = vec!["apple", "banana", "cherry", "coconut", "grape"];
+  assert_eq!(find_contains(&v, "ap"), vec![0, 4])
 }
 
 /// P2b: fill_progress_bar is a function that takes:
@@ -60,13 +77,36 @@ fn find_contains_test() {
 /// For example, at a progress of 20% with bracketed delimiters, the bar would be:
 ///   [==        ]
 pub fn fill_progress_bar(
-  /* Pick and justify your parameters */
-) -> () /* Pick and justify your return type */
+  buf:&mut str,
+  // buf = mutable sequence. Need to mutate, otherwise free choice
+  delims: (&char, &char),
+  // delims = 2 chars, read only
+  // could ask for a symbol representing a fixed set of defaults (bracket, paren, ....)
+  // could allow multi-char delims
+  // but those are harder for me to work with
+  frac: usize
+  // frac = integer between 0 and 100
+)
+// no return type, mutate buf
 {
-  unimplemented!();
+  let ll = buf.len();
+  let tofill = (((ll - 2) as f32) * ( (frac as f32) / 100.0 )) as usize;
+  let buf2 = unsafe { buf.as_bytes_mut() };
+  for ii in 0..ll {
+    if ii == 0 {
+      buf2[ii] = delims.0.clone() as u8
+    } else if ii == (ll-1) {
+      buf2[ii] = delims.1.clone() as u8
+    } else if ii <= tofill {
+      buf2[ii] = '=' as u8
+    }
+  }
+  return
 }
 
 #[test]
 fn test_fill_progress_bar() {
-  /* Add your unit test here! */
+  let mut buf = String::from("            ");
+  fill_progress_bar(&mut buf, (&'[', &']'), 90);
+  assert_eq!(buf, "[========= ]")
 }
